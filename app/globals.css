@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background-primary text-content-primary font-sans antialiased;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply w-full max-w-[1440px] px-6 md:px-12 lg:px-[120px] mx-auto;
+  }
+
+  .grid-custom {
+    @apply grid grid-cols-4 md:grid-cols-8 lg:grid-cols-desktop gap-6;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_20px_rgba(37,99,235,0.1)] hover:border-brand-primary/50;
+  }
+}
