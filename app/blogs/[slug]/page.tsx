@@ -11,6 +11,7 @@ interface BlogPost {
   title: string;
   date?: string;
   contentHtml: string;
+  tags?: string[];
 }
 
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
@@ -46,7 +47,52 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
     title,
     date: data.date,
     contentHtml,
+    tags: data.tags || [],
   };
+}
+
+interface RelatedPost {
+  slug: string;
+  title: string;
+  image?: string;
+}
+
+function getRelatedPosts(currentSlug: string, tags: string[]): RelatedPost[] {
+  const blogsDirectory = path.join(process.cwd(), 'blogs');
+  const fileNames = fs.readdirSync(blogsDirectory);
+
+  const posts = fileNames
+    .filter((fileName) => fileName.endsWith('.md'))
+    .map((fileName) => {
+      const slug = fileName.replace(/\.md$/, '').replace(/^# /, '').replace(/ /g, '-').toLowerCase();
+      const fullPath = path.join(blogsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
+
+      let title = data.title;
+      if (!title) {
+        const firstLine = content.trim().split('\n')[0];
+        if (firstLine.startsWith('# ')) {
+          title = firstLine.replace('# ', '');
+        } else {
+          title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+      }
+
+      const imageMatch = content.match(/!\[.*?\]\((.*?)\)/);
+      const image = imageMatch ? imageMatch[1] : undefined;
+
+      return {
+        slug,
+        title,
+        tags: data.tags || [],
+        image,
+      };
+    })
+    .filter((post) => post.slug !== currentSlug && post.tags.some((tag) => tags.includes(tag)))
+    .slice(0, 3);
+
+  return posts;
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -56,6 +102,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   if (!post) {
     notFound();
   }
+
+  const relatedPosts = getRelatedPosts(slug, post.tags);
 
   return (
     <div className="container mx-auto px-6 py-12 max-w-4xl">
@@ -70,6 +118,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
       </article>
       <DisqusComments slug={slug} title={post.title} />
+      {relatedPosts.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-6 text-white">Related Posts</h2>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {relatedPosts.map((relatedPost) => (
+              <div key={relatedPost.slug} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                {relatedPost.image && <img src={relatedPost.image} alt={relatedPost.title} className="w-full h-32 object-cover rounded-lg mb-4" />}
+                <h3 className="text-lg font-semibold mb-2">
+                  <Link href={`/blogs/${relatedPost.slug}`} className="text-blue-600 hover:text-blue-800">
+                    {relatedPost.title}
+                  </Link>
+                </h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

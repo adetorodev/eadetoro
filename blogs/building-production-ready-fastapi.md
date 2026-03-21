@@ -1,6 +1,14 @@
+---
+title: Building Production-Ready FastAPI APIs Architecture: A Guide to Clean Design
+tags: ['fastapi', 'python', 'architecture', 'api', 'backend-system', 'clean-code']
+date: 2026-03-21
+---
+
 # Building Production-Ready FastAPI APIs Architecture: A Guide to Clean Design
 
 ![Building Scalable API](/images/Building-Scalable-api.png)
+
+Tags: Architecture, FastAPI, Backend System
 
 When building applications, our initial grand ideas of clean, well-ordered code often degrade over time into a confusing morass of coupled modules, resulting in what software engineers call the "Big Ball of Mud" anti-pattern. In FastAPI specifically, a very common mistake is mixing domain logic directly with API framework code and database ORMs like SQLAlchemy.
 
