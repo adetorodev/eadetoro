@@ -89,7 +89,7 @@ function getRelatedPosts(currentSlug: string, tags: string[]): RelatedPost[] {
         image,
       };
     })
-    .filter((post) => post.slug !== currentSlug && post.tags.some((tag) => tags.includes(tag)))
+    .filter((post) => post.slug !== currentSlug && post.tags.some((tag: string) => tags.includes(tag)))
     .slice(0, 3);
 
   return posts;
