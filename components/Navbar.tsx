@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { name: 'Projects', href: '/projects' },
   { name: 'Researches', href: '/researches' },
   { name: 'Books', href: '/books' },
+  { name: 'Blogs', href: '/blogs' },
   { name: 'Contact', href: '/contact' },
 ];
 
@@ -34,14 +35,14 @@ export function Navbar() {
         <Link href="/" className="font-bold text-xl tracking-tight text-content-primary">
           Adewale Adetoro
         </Link>
-        
+
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href));
             return (
-              <Link 
-                key={link.name} 
+              <Link
+                key={link.name}
                 href={link.href}
                 className={`text-sm tracking-wide transition-colors hover:text-brand-primary ${isActive ? 'text-brand-primary font-medium' : 'text-content-secondary'}`}
               >
