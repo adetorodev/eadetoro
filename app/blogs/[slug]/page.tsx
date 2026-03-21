@@ -13,6 +13,7 @@ interface BlogPost {
   date?: string;
   contentHtml: string;
   tags?: string[];
+  image?: string;
 }
 
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
@@ -39,6 +40,9 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
     }
   }
 
+  const imageMatch = content.match(/!\[.*?\]\((.*?)\)/);
+  const image = imageMatch ? imageMatch[1] : undefined;
+
   const processedContent = await remark()
     .use(html)
     .process(content);
@@ -49,6 +53,7 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
     date: data.date,
     contentHtml,
     tags: data.tags || [],
+    image,
   };
 }
 
