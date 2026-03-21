@@ -6,6 +6,7 @@ import html from 'remark-html';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DisqusComments } from '../../../components/DisqusComments';
+import { Metadata } from 'next';
 
 interface BlogPost {
   title: string;
@@ -95,6 +96,36 @@ function getRelatedPosts(currentSlug: string, tags: string[]): RelatedPost[] {
   return posts;
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
+
+  if (!post) {
+    return {
+      title: 'Blog Post Not Found',
+    };
+  }
+
+  const description = post.contentHtml.slice(0, 160).replace(/<[^>]*>/g, '').trim();
+
+  return {
+    title: post.title,
+    description,
+    keywords: post.tags?.join(', '),
+    openGraph: {
+      title: post.title,
+      description,
+      images: post.image ? [{ url: post.image }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      images: post.image ? [post.image] : [],
+    },
+  };
+}
+
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await getBlogPost(slug);
@@ -103,7 +134,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound();
   }
 
-  const relatedPosts = getRelatedPosts(slug, post.tags);
+  const relatedPosts = getRelatedPosts(slug, post.tags || []);
 
   return (
     <div className="container mx-auto px-6 py-12 max-w-4xl">

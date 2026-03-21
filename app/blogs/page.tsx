@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 interface BlogPost {
   slug: string;
@@ -49,6 +50,16 @@ function getBlogPosts(): BlogPost[] {
 
   return posts;
 }
+
+export const metadata: Metadata = {
+  title: 'Blogs | Adewale Adetoro',
+  description: 'Explore my latest blog posts on software development, FastAPI, AI, and more.',
+  keywords: 'blogs, software development, FastAPI, AI, programming',
+  openGraph: {
+    title: 'Blogs | Adewale Adetoro',
+    description: 'Explore my latest blog posts on software development, FastAPI, AI, and more.',
+  },
+};
 
 export default function BlogsPage() {
   const posts = getBlogPosts();
