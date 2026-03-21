@@ -5,6 +5,7 @@ import { remark } from 'remark';
 import html from 'remark-html';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { DisqusComments } from '../../../components/DisqusComments';
 
 interface BlogPost {
   title: string;
@@ -68,6 +69,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         )}
         <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
       </article>
+      <DisqusComments slug={slug} title={post.title} />
     </div>
   );
 }
