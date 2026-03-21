@@ -117,6 +117,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         )}
         <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
       </article>
+      <div className="mt-12 text-center">
+        <h2 className="text-xl font-semibold mb-4 text-white">Join the Conversation</h2>
+        <p className="text-gray-300 mb-6">What are your thoughts on this topic? Share your insights, ask questions, or discuss with fellow readers in the comments below!</p>
+      </div>
       <DisqusComments slug={slug} title={post.title} />
       {relatedPosts.length > 0 && (
         <div className="mt-12">
