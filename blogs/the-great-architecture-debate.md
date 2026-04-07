@@ -1,3 +1,9 @@
+---
+title: "The Great Architecture Debate: Monolithic vs. Microservices"
+tags: ['fastapi', 'python', 'architecture', 'api', 'backend-system', 'clean-code']
+date: 2026-04-07
+---
+
 # The Great Architecture Debate
 
 ![Architecture debate overview](/images/architecture-debate.png)
